@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medicao/components/cliente_widget.dart';
 import 'package:medicao/provider/provider_clientes.dart';
+import 'package:medicao/routes/app_routes.dart';
 import 'package:provider/provider.dart';
 
 class ClienteList extends StatelessWidget {
@@ -15,7 +16,7 @@ class ClienteList extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.add),
               onPressed: () {
-                
+                Navigator.of(context).pushNamed(AppRoutes.CLIENTE_FORM);
               },
             ),
           ],

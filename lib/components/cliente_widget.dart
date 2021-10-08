@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medicao/models/cliente_model.dart';
+import 'package:medicao/routes/app_routes.dart';
 
 class ClienteTag extends StatelessWidget {
   final Cliente cliente;
@@ -24,7 +25,12 @@ class ClienteTag extends StatelessWidget {
                   Icons.edit,
                   color: Colors.green,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pushNamed(
+                    AppRoutes.CLIENTE_FORM,
+                    arguments: cliente,
+                  );
+                },
               ),
               IconButton(
                 icon: Icon(
