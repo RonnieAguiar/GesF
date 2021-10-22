@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:medicao/models/cliente_model.dart';
+import 'package:medicao/provider/provider_clientes.dart';
 import 'package:medicao/routes/app_routes.dart';
+import 'package:provider/provider.dart';
 
 class ClienteTag extends StatelessWidget {
   final Cliente cliente;
@@ -37,7 +39,9 @@ class ClienteTag extends StatelessWidget {
                   Icons.delete,
                   color: Colors.red,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Provider.of<Clientes>(context, listen: false).remove(cliente);
+                },
               ),
             ],
           ),
