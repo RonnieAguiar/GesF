@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 class MenuItem extends StatelessWidget {
   final String nome;
   final IconData icone;
-  final String route;
+  final String? route;
 
   const MenuItem({
-    @required this.nome,
-    @required this.icone,
+    required this.nome,
+    required this.icone,
     this.route,
   });
 
@@ -16,8 +16,9 @@ class MenuItem extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         route == null
+        // TODO Remover possibilidade de menu sem uma rota
             ? print(Text('Sem caminho!'))
-            : Navigator.of(context).pushNamed(route);
+            : Navigator.of(context).pushNamed(route!);
       },
       child: Container(
         padding: const EdgeInsets.all(8),

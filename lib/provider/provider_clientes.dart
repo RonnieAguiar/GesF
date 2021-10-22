@@ -20,11 +20,7 @@ class Clientes with ChangeNotifier {
   }
 
   void put(Cliente cliente) {
-    if (cliente == null) {
-      return;
-    }
-
-    if (cliente.id != null && _items.containsKey(cliente.id)) {
+    if (cliente.id != -1 && _items.containsKey(cliente.id)) {
       _items.update(cliente.id, (_) => cliente);
     } else {
       final id = Random().nextInt(1000);
@@ -46,10 +42,8 @@ class Clientes with ChangeNotifier {
     notifyListeners();
   }
 
-  void remove (Cliente cliente){
-    if (cliente != null && cliente.id != null){
-      _items.remove(cliente.id);
-      notifyListeners();
-    }
+  void remove(Cliente cliente) {
+    _items.remove(cliente.id);
+    notifyListeners();
   }
 }
