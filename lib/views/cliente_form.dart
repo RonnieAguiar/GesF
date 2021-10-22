@@ -6,32 +6,46 @@ import 'package:provider/provider.dart';
 
 class ClienteForm extends StatelessWidget {
   final _form = GlobalKey<FormState>();
-  final Map<String, String> _formData = {};
+  final Map<String, dynamic> _formData = {};
+
+  void _loadFormData(Cliente cliente) {
+    _formData["id"] = cliente.id;
+    _formData["nome"] = cliente.nome;
+    _formData["cep"] = cliente.cep;
+    _formData["logradouro"] = cliente.logradouro;
+    _formData["numero"] = cliente.numero;
+    _formData["bairro"] = cliente.bairro;
+    _formData["cidade"] = cliente.cidade;
+    _formData["estado"] = cliente.estado;
+  }
 
   @override
   Widget build(BuildContext context) {
+    final args = ModalRoute.of(context)!.settings.arguments;
+    if (args != null) {
+      final cliente = args as Cliente;
+      _loadFormData(cliente);
+    }
+
     return Scaffold(
       appBar: AppBar(
-        title: Text('Cadastro de cliente'),
+        title: Text("Cadastro de cliente"),
         actions: [
           IconButton(
             icon: Icon(Icons.save),
             onPressed: () {
-              // TODO Fazer validação do form
               final isValid = _form.currentState!.validate();
               if (isValid) {
                 _form.currentState!.save();
                 Provider.of<Clientes>(context, listen: false).put(Cliente(
-                  id: _formData['id'] != null
-                      ? int.parse(_formData['id']!)
-                      : -1,
-                  nome: _formData['nome']!,
-                  cep: _formData['cep']!,
-                  logradouro: _formData['logradouro']!,
-                  numero: _formData['numero']!,
-                  bairro: _formData['bairro']!,
-                  cidade: _formData['cidade']!,
-                  estado: _formData['estado']!,
+                  id: _formData["id"] != null ? _formData["id"]! : -1,
+                  nome: _formData["nome"]!,
+                  cep: _formData["cep"]!,
+                  logradouro: _formData["logradouro"]!,
+                  numero: _formData["numero"]!,
+                  bairro: _formData["bairro"]!,
+                  cidade: _formData["cidade"]!,
+                  estado: _formData["estado"]!,
                 ));
                 Navigator.of(context).pop();
               }
@@ -46,21 +60,24 @@ class ClienteForm extends StatelessWidget {
           child: Column(
             children: [
               TextFormField(
-                onSaved: (value) => _formData['nome'] = value!,
+                onSaved: (value) => _formData["nome"] = value!,
+                initialValue: _formData["nome"],
                 validator: (value) {
                   return value == null ||
                           value.trim().isEmpty ||
                           value.trim().length < 3
-                      ? 'Nome inválido ou muito curto'
+                      ? "Nome inválido ou muito curto"
                       : null;
                 },
-                decoration: InputDecoration(labelText: 'Nome'),
+                decoration: InputDecoration(labelText: "Nome"),
+                autofocus: true,
               ),
               TextFormField(
-                onSaved: (value) => _formData['cep'] = value!,
+                onSaved: (value) => _formData["cep"] = value!,
+                initialValue: _formData["cep"],
                 validator: (value) {
                   return value!.trim().isEmpty || value.length < 8
-                      ? 'CEP precisa de 8 digitos'
+                      ? "CEP precisa de 8 digitos"
                       : null;
                 },
                 decoration: InputDecoration(
@@ -79,26 +96,29 @@ class ClienteForm extends StatelessWidget {
                 ],
               ),
               TextFormField(
-                onSaved: (value) => _formData['logradouro'] = value!,
+                onSaved: (value) => _formData["logradouro"] = value!,
+                initialValue: _formData["logradouro"],
                 validator: (value) {
                   return value!.trim().isEmpty || value.length < 4
-                      ? 'Endereço muito curto'
+                      ? "Endereço muito curto"
                       : null;
                 },
                 decoration: InputDecoration(labelText: "Endereço"),
               ),
               TextFormField(
-                onSaved: (value) => _formData['numero'] = value!,
+                onSaved: (value) => _formData["numero"] = value!,
+                initialValue: _formData["numero"],
                 validator: (value) {
-                  return value!.trim().isEmpty ? 'Necessário informar' : null;
+                  return value!.trim().isEmpty ? "Necessário informar" : null;
                 },
                 decoration: InputDecoration(labelText: "nº e complemento"),
               ),
               TextFormField(
-                onSaved: (value) => _formData['bairro'] = value!,
+                onSaved: (value) => _formData["bairro"] = value!,
+                initialValue: _formData["bairro"],
                 validator: (value) {
                   return value!.trim().isEmpty || value.length < 4
-                      ? 'Bairro muito curto'
+                      ? "Bairro muito curto"
                       : null;
                 },
                 decoration: InputDecoration(labelText: "Bairro"),
@@ -108,10 +128,11 @@ class ClienteForm extends StatelessWidget {
                   Expanded(
                     flex: 3,
                     child: TextFormField(
-                      onSaved: (value) => _formData['cidade'] = value!,
+                      onSaved: (value) => _formData["cidade"] = value!,
+                      initialValue: _formData["cidade"],
                       validator: (value) {
                         return value!.length < 3
-                            ? 'Nome da cidade muito curto'
+                            ? "Nome da cidade muito curto"
                             : null;
                       },
                       decoration: InputDecoration(labelText: "Cidade"),
@@ -121,9 +142,10 @@ class ClienteForm extends StatelessWidget {
                   Expanded(
                     child: TextFormField(
                       onSaved: (value) =>
-                          _formData['estado'] = value!.toUpperCase(),
+                          _formData["estado"] = value!.toUpperCase(),
+                      initialValue: _formData["estado"],
                       validator: (value) {
-                        return value!.length != 2 ? 'Informe' : null;
+                        return value!.length != 2 ? "Informe" : null;
                       },
                       decoration: InputDecoration(labelText: "Estado"),
                       keyboardType: TextInputType.name,
