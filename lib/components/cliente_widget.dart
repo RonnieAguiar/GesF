@@ -40,7 +40,32 @@ class ClienteTag extends StatelessWidget {
                   color: Colors.red,
                 ),
                 onPressed: () {
-                  Provider.of<Clientes>(context, listen: false).remove(cliente);
+                  showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: Text(
+                        "Excluir Cliente",
+                        style: TextStyle(color: Colors.red.shade700),
+                      ),
+                      content: Text("Confirma exclusão?"),
+                      actions: [
+                        TextButton(
+                          child: Text("Não"),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        TextButton(
+                          child: Text("Sim"),
+                          onPressed: () {
+                            Provider.of<Clientes>(context, listen: false)
+                                .remove(cliente);
+                            Navigator.of(context).pop();
+                          },
+                        )
+                      ],
+                    ),
+                  );
                 },
               ),
             ],
