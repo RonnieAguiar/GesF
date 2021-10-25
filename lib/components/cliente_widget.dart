@@ -37,7 +37,7 @@ class ClienteTag extends StatelessWidget {
               IconButton(
                 icon: Icon(
                   Icons.delete,
-                  color: Colors.red,
+                  color: Colors.red.shade700,
                 ),
                 onPressed: () {
                   showDialog(
