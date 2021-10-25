@@ -20,14 +20,10 @@ class Users with ChangeNotifier {
   }
 
   void put(User user) {
-    if (user == null) {
-      return;
-    }
-
     if (user.id != null &&
-        user.id.trim().isNotEmpty &&
+        user.id!.trim().isNotEmpty &&
         _items.containsKey(user.id)) {
-      _items.update(user.id, (_) => user);
+      _items.update(user.id!, (_) => user);
     } else {
       final id = Random().nextDouble().toString();
       _items.putIfAbsent(
@@ -39,13 +35,13 @@ class Users with ChangeNotifier {
                 avatarUrl: user.avatarUrl,
               ));
     }
-    // #TODO: Fazer validação de iserção de dados
+    // TODO Fazer validação de inserção de dados
 
     notifyListeners();
   }
 
-  void remove (User user){
-    if(user != null && user.id != null ){
+  void remove(User user) {
+    if (user.id != null) {
       _items.remove(user.id);
       notifyListeners();
     }

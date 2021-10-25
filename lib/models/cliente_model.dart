@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 class Cliente {
   final int id;
@@ -11,13 +10,13 @@ class Cliente {
   final String estado;
 
   const Cliente({
-    this.id,
-    @required this.nome,
-    @required this.cep,
-    @required this.logradouro,
-    @required this.numero,
-    @required this.bairro,
-    @required this.cidade,
-    @required this.estado,
+    required this.id,
+    required this.nome,
+    required this.cep,
+    required this.logradouro,
+    required this.numero,
+    required this.bairro,
+    required this.cidade,
+    required this.estado,
   });
 }

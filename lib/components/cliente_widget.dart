@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:medicao/models/cliente_model.dart';
+import 'package:medicao/provider/provider_clientes.dart';
+import 'package:medicao/routes/app_routes.dart';
+import 'package:provider/provider.dart';
 
 class ClienteTag extends StatelessWidget {
   final Cliente cliente;
@@ -24,14 +27,46 @@ class ClienteTag extends StatelessWidget {
                   Icons.edit,
                   color: Colors.green,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.of(context).pushNamed(
+                    AppRoutes.CLIENTE_FORM,
+                    arguments: cliente,
+                  );
+                },
               ),
               IconButton(
                 icon: Icon(
                   Icons.delete,
                   color: Colors.red,
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (ctx) => AlertDialog(
+                      title: Text(
+                        "Excluir Cliente",
+                        style: TextStyle(color: Colors.red.shade700),
+                      ),
+                      content: Text("Confirma exclusão?"),
+                      actions: [
+                        TextButton(
+                          child: Text("Não"),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        TextButton(
+                          child: Text("Sim"),
+                          onPressed: () {
+                            Provider.of<Clientes>(context, listen: false)
+                                .remove(cliente);
+                            Navigator.of(context).pop();
+                          },
+                        )
+                      ],
+                    ),
+                  );
+                },
               ),
             ],
           ),
