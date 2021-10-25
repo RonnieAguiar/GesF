@@ -51,21 +51,20 @@ class ClienteTag extends StatelessWidget {
                       actions: [
                         TextButton(
                           child: Text("Não"),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
+                          onPressed: () => Navigator.of(context).pop(false),
                         ),
                         TextButton(
                           child: Text("Sim"),
-                          onPressed: () {
-                            Provider.of<Clientes>(context, listen: false)
-                                .remove(cliente);
-                            Navigator.of(context).pop();
-                          },
+                          onPressed: () => Navigator.of(context).pop(true),
                         )
                       ],
                     ),
-                  );
+                  ).then((confirmed) {
+                    if (confirmed) {
+                      Provider.of<Clientes>(context, listen: false)
+                          .remove(cliente);
+                    }
+                  });
                 },
               ),
             ],
