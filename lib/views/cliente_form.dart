@@ -57,105 +57,107 @@ class ClienteForm extends StatelessWidget {
         padding: EdgeInsets.all(10),
         child: Form(
           key: _form,
-          child: Column(
-            children: [
-              TextFormField(
-                onSaved: (value) => _formData["nome"] = value!,
-                initialValue: _formData["nome"],
-                validator: (value) {
-                  return value == null ||
-                          value.trim().isEmpty ||
-                          value.trim().length < 3
-                      ? "Nome inválido ou muito curto"
-                      : null;
-                },
-                decoration: InputDecoration(labelText: "Nome"),
-                autofocus: true,
-              ),
-              TextFormField(
-                onSaved: (value) => _formData["cep"] = value!,
-                initialValue: _formData["cep"],
-                validator: (value) {
-                  return value!.trim().isEmpty || value.length < 8
-                      ? "CEP precisa de 8 digitos"
-                      : null;
-                },
-                decoration: InputDecoration(
-                  labelText: "CEP",
-                  suffixIcon: IconButton(
-                    icon: Icon(Icons.travel_explore),
-                    onPressed: () {
-                      // TODO Realizar importação de dados de endereço
-                    },
-                  ),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextFormField(
+                  onSaved: (value) => _formData["nome"] = value!,
+                  initialValue: _formData["nome"],
+                  validator: (value) {
+                    return value == null ||
+                            value.trim().isEmpty ||
+                            value.trim().length < 3
+                        ? "Nome inválido ou muito curto"
+                        : null;
+                  },
+                  decoration: InputDecoration(labelText: "Nome"),
+                  autofocus: true,
                 ),
-                keyboardType: TextInputType.number,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  LengthLimitingTextInputFormatter(8),
-                ],
-              ),
-              TextFormField(
-                onSaved: (value) => _formData["logradouro"] = value!,
-                initialValue: _formData["logradouro"],
-                validator: (value) {
-                  return value!.trim().isEmpty || value.length < 4
-                      ? "Endereço muito curto"
-                      : null;
-                },
-                decoration: InputDecoration(labelText: "Endereço"),
-              ),
-              TextFormField(
-                onSaved: (value) => _formData["numero"] = value!,
-                initialValue: _formData["numero"],
-                validator: (value) {
-                  return value!.trim().isEmpty ? "Necessário informar" : null;
-                },
-                decoration: InputDecoration(labelText: "nº e complemento"),
-              ),
-              TextFormField(
-                onSaved: (value) => _formData["bairro"] = value!,
-                initialValue: _formData["bairro"],
-                validator: (value) {
-                  return value!.trim().isEmpty || value.length < 4
-                      ? "Bairro muito curto"
-                      : null;
-                },
-                decoration: InputDecoration(labelText: "Bairro"),
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 3,
-                    child: TextFormField(
-                      onSaved: (value) => _formData["cidade"] = value!,
-                      initialValue: _formData["cidade"],
-                      validator: (value) {
-                        return value!.length < 3
-                            ? "Nome da cidade muito curto"
-                            : null;
+                TextFormField(
+                  onSaved: (value) => _formData["cep"] = value!,
+                  initialValue: _formData["cep"],
+                  validator: (value) {
+                    return value!.trim().isEmpty || value.length < 8
+                        ? "CEP precisa de 8 digitos"
+                        : null;
+                  },
+                  decoration: InputDecoration(
+                    labelText: "CEP",
+                    suffixIcon: IconButton(
+                      icon: Icon(Icons.travel_explore),
+                      onPressed: () {
+                        // TODO Realizar importação de dados de endereço
                       },
-                      decoration: InputDecoration(labelText: "Cidade"),
                     ),
                   ),
-                  VerticalDivider(),
-                  Expanded(
-                    child: TextFormField(
-                      onSaved: (value) =>
-                          _formData["estado"] = value!.toUpperCase(),
-                      initialValue: _formData["estado"],
-                      validator: (value) {
-                        return value!.length != 2 ? "Informe" : null;
-                      },
-                      decoration: InputDecoration(labelText: "Estado"),
-                      keyboardType: TextInputType.name,
-                      inputFormatters: [LengthLimitingTextInputFormatter(2)],
-                      textCapitalization: TextCapitalization.characters,
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    LengthLimitingTextInputFormatter(8),
+                  ],
+                ),
+                TextFormField(
+                  onSaved: (value) => _formData["logradouro"] = value!,
+                  initialValue: _formData["logradouro"],
+                  validator: (value) {
+                    return value!.trim().isEmpty || value.length < 4
+                        ? "Endereço muito curto"
+                        : null;
+                  },
+                  decoration: InputDecoration(labelText: "Endereço"),
+                ),
+                TextFormField(
+                  onSaved: (value) => _formData["numero"] = value!,
+                  initialValue: _formData["numero"],
+                  validator: (value) {
+                    return value!.trim().isEmpty ? "Necessário informar" : null;
+                  },
+                  decoration: InputDecoration(labelText: "nº e complemento"),
+                ),
+                TextFormField(
+                  onSaved: (value) => _formData["bairro"] = value!,
+                  initialValue: _formData["bairro"],
+                  validator: (value) {
+                    return value!.trim().isEmpty || value.length < 4
+                        ? "Bairro muito curto"
+                        : null;
+                  },
+                  decoration: InputDecoration(labelText: "Bairro"),
+                ),
+                Row(
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: TextFormField(
+                        onSaved: (value) => _formData["cidade"] = value!,
+                        initialValue: _formData["cidade"],
+                        validator: (value) {
+                          return value!.length < 3
+                              ? "Nome da cidade muito curto"
+                              : null;
+                        },
+                        decoration: InputDecoration(labelText: "Cidade"),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    VerticalDivider(),
+                    Expanded(
+                      child: TextFormField(
+                        onSaved: (value) =>
+                            _formData["estado"] = value!.toUpperCase(),
+                        initialValue: _formData["estado"],
+                        validator: (value) {
+                          return value!.length != 2 ? "Informe" : null;
+                        },
+                        decoration: InputDecoration(labelText: "Estado"),
+                        keyboardType: TextInputType.name,
+                        inputFormatters: [LengthLimitingTextInputFormatter(2)],
+                        textCapitalization: TextCapitalization.characters,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
