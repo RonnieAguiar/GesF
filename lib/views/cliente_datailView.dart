@@ -8,16 +8,6 @@ class ClienteDetail extends StatelessWidget {
     final args = ModalRoute.of(context)!.settings.arguments;
     final cliente = args as Cliente;
 
-    final String endereco = cliente.logradouro +
-        ", " +
-        cliente.numero +
-        ' - ' +
-        cliente.bairro +
-        ', ' +
-        cliente.cidade +
-        '/' +
-        cliente.estado;
-
     return Scaffold(
       appBar: AppBar(
         title: Text("Contatos do Cliente"),
@@ -35,13 +25,13 @@ class ClienteDetail extends StatelessWidget {
           children: [
             ListTile(
                 title: Text(cliente.nome),
-                subtitle: Text(endereco),
+                subtitle: Text(Cliente.enderecador(cliente)),
                 trailing: IconButton(
                   icon: Icon(
                     Icons.location_on_outlined,
                     color: Colors.blue,
                   ),
-                  onPressed: () => MapsLauncher.launchQuery(endereco),
+                  onPressed: () => MapsLauncher.launchQuery(Cliente.enderecador(cliente)),
                 )),
           ],
         ),

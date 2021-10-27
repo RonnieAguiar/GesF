@@ -1,4 +1,3 @@
-
 class Cliente {
   final int id;
   final String nome;
@@ -19,4 +18,19 @@ class Cliente {
     required this.cidade,
     required this.estado,
   });
+
+  static String enderecador(Cliente cliente) {
+    String endereco = cliente.logradouro +
+        ", " +
+        cliente.numero +
+        ' - ' +
+        cliente.bairro +
+        ', ' +
+        cliente.cidade +
+        '/' +
+        cliente.estado +
+        ' - CEP: ' +
+        cliente.cep;
+    return endereco;
+  }
 }

@@ -11,15 +11,6 @@ class ClienteTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String endereco = cliente.logradouro +
-        ", " +
-        cliente.numero +
-        ' - ' +
-        cliente.bairro +
-        ', ' +
-        cliente.cidade +
-        '/' +
-        cliente.estado;
 
     return Card(
         color: Colors.blueGrey.shade50,
@@ -33,7 +24,7 @@ class ClienteTag extends StatelessWidget {
                 cliente.nome,
                 style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
               ),
-              Text(endereco),
+              Text(Cliente.enderecador(cliente)),
               Row(
                 children: [
                   Expanded(
@@ -118,7 +109,7 @@ class ClienteTag extends StatelessWidget {
                             Icons.location_on_outlined,
                             color: Colors.blue,
                           ),
-                          onPressed: () => MapsLauncher.launchQuery(endereco),
+                          onPressed: () => MapsLauncher.launchQuery(Cliente.enderecador(cliente)),
                         )
                       ],
                     ),
