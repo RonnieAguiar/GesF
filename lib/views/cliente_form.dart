@@ -2,10 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:medicao/models/cliente_model.dart';
 import 'package:medicao/provider/provider_clientes.dart';
+import 'package:medicao/services/via_cep_service.dart';
 import 'package:provider/provider.dart';
 
-class ClienteForm extends StatelessWidget {
+class ClienteForm extends StatefulWidget {
+  @override
+  State<ClienteForm> createState() => _ClienteFormState();
+}
+
+class _ClienteFormState extends State<ClienteForm> {
+  TextEditingController _cepController = TextEditingController();
+  TextEditingController _logradouroController = TextEditingController();
+  TextEditingController _bairroController = TextEditingController();
+  TextEditingController _cidadeController = TextEditingController();
+  TextEditingController _estadoController = TextEditingController();
+
   final _form = GlobalKey<FormState>();
+
   final Map<String, dynamic> _formData = {};
 
   void _loadFormData(Cliente cliente) {
@@ -81,12 +94,40 @@ class ClienteForm extends StatelessWidget {
                         ? "CEP precisa de 8 digitos"
                         : null;
                   },
+                  controller: _cepController,
                   decoration: InputDecoration(
                     labelText: "CEP",
                     suffixIcon: IconButton(
                       icon: Icon(Icons.travel_explore),
-                      onPressed: () {
-                        // TODO Realizar importação de dados de endereço
+                      onPressed: () async {
+                        
+                        if (_cepController.text.trim().isEmpty ||
+                            _cepController.text.length < 8) {
+                          showDialog(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                    title: Text("Consulta CEP"),
+                                    content: Text(
+                                      'CEP precisa conter 8 digitos',
+                                      style:
+                                          TextStyle(color: Colors.red.shade700),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () =>
+                                              Navigator.of(context).pop(),
+                                          child: Text("OK"))
+                                    ],
+                                  ));
+                        } else {
+                          // FIXME tratar resposta para cep incorreto
+                          final cep = _cepController.text;
+                          final resultadoCep = await ViaCep.fetchCep(cep: cep);
+                          _logradouroController.text = resultadoCep.logradouro;
+                          _bairroController.text = resultadoCep.bairro;
+                          _cidadeController.text = resultadoCep.localidade;
+                          _estadoController.text = resultadoCep.uf;
+                        }
                       },
                     ),
                   ),
@@ -97,6 +138,7 @@ class ClienteForm extends StatelessWidget {
                   ],
                 ),
                 TextFormField(
+                  controller: _logradouroController,
                   onSaved: (value) => _formData["logradouro"] = value!,
                   initialValue: _formData["logradouro"],
                   validator: (value) {
@@ -115,6 +157,7 @@ class ClienteForm extends StatelessWidget {
                   decoration: InputDecoration(labelText: "nº e complemento"),
                 ),
                 TextFormField(
+                  controller: _bairroController,
                   onSaved: (value) => _formData["bairro"] = value!,
                   initialValue: _formData["bairro"],
                   validator: (value) {
@@ -129,6 +172,7 @@ class ClienteForm extends StatelessWidget {
                     Expanded(
                       flex: 3,
                       child: TextFormField(
+                        controller: _cidadeController,
                         onSaved: (value) => _formData["cidade"] = value!,
                         initialValue: _formData["cidade"],
                         validator: (value) {
@@ -142,6 +186,7 @@ class ClienteForm extends StatelessWidget {
                     VerticalDivider(),
                     Expanded(
                       child: TextFormField(
+                        controller: _estadoController,
                         onSaved: (value) =>
                             _formData["estado"] = value!.toUpperCase(),
                         initialValue: _formData["estado"],
