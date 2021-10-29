@@ -168,6 +168,7 @@ class _ClienteFormState extends State<ClienteForm> {
                 ),
                 TextFormField(
                   onSaved: (value) => _formData["numero"] = value!,
+                  initialValue: _formData["numero"],
                   validator: (value) {
                     return value!.trim().isEmpty ? "Necessário informar" : null;
                   },
