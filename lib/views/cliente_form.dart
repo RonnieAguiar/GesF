@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:medicao/models/cliente_model.dart';
@@ -24,12 +26,12 @@ class _ClienteFormState extends State<ClienteForm> {
   void _loadFormData(Cliente cliente) {
     _formData["id"] = cliente.id;
     _formData["nome"] = cliente.nome;
-    _formData["cep"] = cliente.cep;
-    _formData["logradouro"] = cliente.logradouro;
     _formData["numero"] = cliente.numero;
-    _formData["bairro"] = cliente.bairro;
-    _formData["cidade"] = cliente.cidade;
-    _formData["estado"] = cliente.estado;
+    _cepController.text = cliente.cep;
+    _logradouroController.text = cliente.logradouro;
+    _bairroController.text = cliente.bairro;
+    _cidadeController.text = cliente.cidade;
+    _estadoController.text = cliente.estado;
   }
 
   @override
@@ -88,7 +90,6 @@ class _ClienteFormState extends State<ClienteForm> {
                 ),
                 TextFormField(
                   onSaved: (value) => _formData["cep"] = value!,
-                  initialValue: _formData["cep"],
                   validator: (value) {
                     return value!.trim().isEmpty || value.length < 8
                         ? "CEP precisa de 8 digitos"
@@ -100,7 +101,6 @@ class _ClienteFormState extends State<ClienteForm> {
                     suffixIcon: IconButton(
                       icon: Icon(Icons.travel_explore),
                       onPressed: () async {
-                        
                         if (_cepController.text.trim().isEmpty ||
                             _cepController.text.length < 8) {
                           showDialog(
@@ -122,11 +122,30 @@ class _ClienteFormState extends State<ClienteForm> {
                         } else {
                           // FIXME tratar resposta para cep incorreto
                           final cep = _cepController.text;
-                          final resultadoCep = await ViaCep.fetchCep(cep: cep);
-                          _logradouroController.text = resultadoCep.logradouro;
-                          _bairroController.text = resultadoCep.bairro;
-                          _cidadeController.text = resultadoCep.localidade;
-                          _estadoController.text = resultadoCep.uf;
+                          try {
+                            final resultadoCep =
+                                await ViaCep.fetchCep(cep: cep);
+                            _logradouroController.text =
+                                resultadoCep.logradouro;
+                            _bairroController.text = resultadoCep.bairro;
+                            _cidadeController.text = resultadoCep.localidade;
+                            _estadoController.text = resultadoCep.uf;
+                          } catch (e) {
+                            showDialog(
+                              context: context,
+                              builder: (ctx) => AlertDialog(
+                                title: Text("Erro ao importar dados"),
+                                content: Text("$e"),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () =>
+                                        Navigator.of(context).pop(),
+                                    child: Text("Ok"),
+                                  )
+                                ],
+                              ),
+                            );
+                          }
                         }
                       },
                     ),
@@ -140,7 +159,6 @@ class _ClienteFormState extends State<ClienteForm> {
                 TextFormField(
                   controller: _logradouroController,
                   onSaved: (value) => _formData["logradouro"] = value!,
-                  initialValue: _formData["logradouro"],
                   validator: (value) {
                     return value!.trim().isEmpty || value.length < 4
                         ? "Endereço muito curto"
@@ -150,7 +168,6 @@ class _ClienteFormState extends State<ClienteForm> {
                 ),
                 TextFormField(
                   onSaved: (value) => _formData["numero"] = value!,
-                  initialValue: _formData["numero"],
                   validator: (value) {
                     return value!.trim().isEmpty ? "Necessário informar" : null;
                   },
@@ -159,7 +176,6 @@ class _ClienteFormState extends State<ClienteForm> {
                 TextFormField(
                   controller: _bairroController,
                   onSaved: (value) => _formData["bairro"] = value!,
-                  initialValue: _formData["bairro"],
                   validator: (value) {
                     return value!.trim().isEmpty || value.length < 4
                         ? "Bairro muito curto"
@@ -174,7 +190,6 @@ class _ClienteFormState extends State<ClienteForm> {
                       child: TextFormField(
                         controller: _cidadeController,
                         onSaved: (value) => _formData["cidade"] = value!,
-                        initialValue: _formData["cidade"],
                         validator: (value) {
                           return value!.length < 3
                               ? "Nome da cidade muito curto"
@@ -189,7 +204,6 @@ class _ClienteFormState extends State<ClienteForm> {
                         controller: _estadoController,
                         onSaved: (value) =>
                             _formData["estado"] = value!.toUpperCase(),
-                        initialValue: _formData["estado"],
                         validator: (value) {
                           return value!.length != 2 ? "Informe" : null;
                         },
