@@ -1,5 +1,4 @@
-import 'dart:async';
-
+import 'package:brasil_fields/brasil_fields.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:medicao/models/cliente_model.dart';
@@ -91,8 +90,8 @@ class _ClienteFormState extends State<ClienteForm> {
                 TextFormField(
                   onSaved: (value) => _formData["cep"] = value!,
                   validator: (value) {
-                    return value!.trim().isEmpty || value.length < 8
-                        ? "CEP precisa de 8 digitos"
+                    return value!.trim().isEmpty || value.length < 10
+                        ? "CEP incompleto"
                         : null;
                   },
                   controller: _cepController,
@@ -102,13 +101,13 @@ class _ClienteFormState extends State<ClienteForm> {
                       icon: Icon(Icons.travel_explore),
                       onPressed: () async {
                         if (_cepController.text.trim().isEmpty ||
-                            _cepController.text.length < 8) {
+                            _cepController.text.length < 10) {
                           showDialog(
                               context: context,
                               builder: (ctx) => AlertDialog(
                                     title: Text("Consulta CEP"),
                                     content: Text(
-                                      'CEP precisa conter 8 digitos',
+                                      'CEP incompleto',
                                       style:
                                           TextStyle(color: Colors.red.shade700),
                                     ),
@@ -121,7 +120,9 @@ class _ClienteFormState extends State<ClienteForm> {
                                   ));
                         } else {
                           // FIXME tratar resposta para cep incorreto
-                          final cep = _cepController.text;
+                          final cep = _cepController.text
+                              .replaceAll(RegExp(r'[^\w\s]+'), '');
+                          print(cep);
                           try {
                             final resultadoCep =
                                 await ViaCep.fetchCep(cep: cep);
@@ -153,7 +154,7 @@ class _ClienteFormState extends State<ClienteForm> {
                   keyboardType: TextInputType.number,
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(8),
+                    CepInputFormatter(),
                   ],
                 ),
                 TextFormField(
