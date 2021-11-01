@@ -1,14 +1,16 @@
-class Cliente {
-  final int id;
-  final String nome;
-  final String cep;
-  final String logradouro;
-  final String numero;
-  final String bairro;
-  final String cidade;
-  final String estado;
+import 'dart:convert';
 
-  const Cliente({
+class Cliente {
+  int id;
+  String nome;
+  String cep;
+  String logradouro;
+  String numero;
+  String bairro;
+  String cidade;
+  String estado;
+
+  Cliente({
     required this.id,
     required this.nome,
     required this.cep,
@@ -19,7 +21,32 @@ class Cliente {
     required this.estado,
   });
 
-  static String enderecador(Cliente cliente) {
+  factory Cliente.fromJson(String str) => Cliente.fromMap(json.decode(str));
+
+  String toJson() => json.encode(toMap());
+
+  factory Cliente.fromMap(Map<String, dynamic> json) => Cliente(
+        id: json["id"],
+        nome: json["nome"],
+        cep: json["cep"],
+        logradouro: json["logradouro"],
+        numero: json["numero"],
+        bairro: json["bairro"],
+        cidade: json["cidade"],
+        estado: json["estado"],
+      );
+
+  Map<String, dynamic> toMap() => {
+        "nome": nome,
+        "cep": cep,
+        "logradouro": logradouro,
+        "numero": numero,
+        "bairro": bairro,
+        "cidade": cidade,
+        "estado": estado,
+      };
+
+  String enderecador(Cliente cliente) {
     String endereco = cliente.logradouro +
         ", " +
         cliente.numero +
