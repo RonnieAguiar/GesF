@@ -66,3 +66,5 @@ function update($id)
     }
     echo json_encode(['success'=>$result]);
 }
+
+close_db();
