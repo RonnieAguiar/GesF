@@ -16,7 +16,7 @@ $funcao = $_POST["funcao"];
 
 switch ($funcao) {
     case "list":
-        listar($id);
+        listar();
         break;
     case "delete":
         apagar($id);
@@ -26,21 +26,13 @@ switch ($funcao) {
         break;
 }
 
-function listar($id)
+function listar()
 {
     require "db.php";
-
-    if ($id == null || $id == "") {
-        $stmt = $db->prepare("SELECT * from Cliente");
-        $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        echo json_encode($result);
-    } else {
-        $stmt = $db->prepare("SELECT * from Cliente WHERE id = ?");
-        $stmt->execute([(int)$id]);
-        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        echo json_encode(['result' => $result]);
-    }
+    $stmt = $db->prepare("SELECT * from Cliente");
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    echo json_encode($result);
 }
 
 function apagar($id)
