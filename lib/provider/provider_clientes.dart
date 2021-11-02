@@ -1,14 +1,14 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:medicao/data/default.dart';
 import 'package:medicao/models/cliente_model.dart';
+import 'package:medicao/services/clientes_service.dart';
 
 class Clientes with ChangeNotifier {
-  final Map<int, Cliente> _items = {...DEFAULT_CLIENTES};
+  final _items = await ClienteServerList.getClienteList();
 
   List<Cliente> get all {
-    return [..._items.values];
+    return _items.values;
   }
 
   int get count {
