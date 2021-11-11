@@ -1,7 +1,6 @@
 <?php
 
 header("Content-Type: application/json");
-include "../gesfapi/db.php";
 
 $id = $_POST["id"];
 $nome = $_POST["nome"];
@@ -14,49 +13,53 @@ $estado = $_POST["estado"];
 
 $funcao = $_POST["funcao"];
 
+$dados = array($nome, $cep, $logradouro, $numero, $bairro, $cidade, $estado);
+
+
 switch ($funcao) {
     case "list":
         listar();
         break;
     case "delete":
-        apagar($id);
+        apagar((int) $id);
         break;
     case "update":
-        update($id);
+        update((int) $id, $dados);
         break;
+    default:
+        echo ("Função não definida");
 }
 
 function listar()
 {
-    require "db.php";
-    $stmt = $db->prepare("SELECT * from Cliente");
+    include "db.php";
+    $stmt = $db->prepare("SELECT * FROM public.cliente");
     $stmt->execute();
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
     echo json_encode($result);
+    close_db();
 }
 
-function apagar($id)
+function apagar(int $id)
 {
-    require "db.php";
-    $stmt = $db->prepare("DELETE from Cliente WHERE id = ?");
-    $result = $stmt->execute([$id]);
+    include "db.php";
+    $stmt = $db->prepare("DELETE FROM public.cliente WHERE id = ?");
+    $result = $stmt->execute($id);
+    $response = array('id' => $id, 'success' => $result);
 
-    echo json_encode(
-        ['id' => $id, 'success' => $result]
-    );
+    echo json_encode($response);
 }
 
-function update($id)
+function update(int $id, array $dados)
 {
-    require "db.php";
-    if ($id == null || $id == "") {
-        $stmt = $db->prepare("INSERT INTO Cliente (nome, cep, logradouro, numero, bairro, cidade, estado) VALUES (?, ?, ?, ?, ?, ?, ?)");
-        $result = $stmt->execute([$nome, $cep, $logradouro, $numero, $bairro, $cidade, $estado]);
-    } else{
-        $stmt = $db->prepare("UPDATE Cliente SET nome = ?, cep = ?, logradouro = ?, numero = ?, bairro = ?, cidade = ?, estado = ? WHERE id = ?");
-        $result = $stmt->execute([$nome, $cep, $logradouro, $numero, $bairro, $cidade, $estado, (int)$id]);        
+    include "db.php";
+    if ($id == null || $id == -1) {
+        $stmt = $db->prepare("INSERT INTO public.cliente (nome, cep, logradouro, numero, bairro, cidade, estado) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        $result = $stmt->execute($dados);
+    } else {
+        $stmt = $db->prepare("UPDATE public.cliente SET nome = ?, cep = ?, logradouro = ?, numero = ?, bairro = ?, cidade = ?, estado = ? WHERE id = ?");
+        $result = $stmt->execute($dados);
     }
-    echo json_encode(['success'=>$result]);
+    $response = array('success' => $result);
+    echo json_encode($response);
 }
-
-close_db();

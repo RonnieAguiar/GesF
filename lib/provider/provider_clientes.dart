@@ -1,14 +1,13 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:medicao/models/cliente_model.dart';
 import 'package:medicao/services/clientes_service.dart';
 
 class Clientes with ChangeNotifier {
-  final _items = await ClienteServerList.getClienteList();
+  final List<Cliente> _items = ClienteServerList().getCliente() as List<Cliente>;
 
   List<Cliente> get all {
-    return _items.values;
+    print(_items);
+    return [..._items];
   }
 
   int get count {
@@ -16,34 +15,16 @@ class Clientes with ChangeNotifier {
   }
 
   Cliente byIndex(int i) {
-    return _items.values.elementAt(i);
+    return _items.elementAt(i);
   }
 
   void put(Cliente cliente) {
-    if (cliente.id != -1 && _items.containsKey(cliente.id)) {
-      _items.update(cliente.id, (_) => cliente);
-    } else {
-      final id = Random().nextInt(1000);
-      _items.putIfAbsent(
-        id,
-        () => Cliente(
-          id: id,
-          nome: cliente.nome,
-          cep: cliente.cep,
-          logradouro: cliente.logradouro,
-          numero: cliente.numero,
-          cidade: cliente.cidade,
-          estado: cliente.estado,
-          bairro: cliente.bairro,
-        ),
-      );
-    }
-
+    ClienteServerPut.Update(cliente);
     notifyListeners();
   }
 
   void remove(Cliente cliente) {
-    _items.remove(cliente.id);
+    ClienteServiceDelete.Delete(cliente);
     notifyListeners();
   }
 }

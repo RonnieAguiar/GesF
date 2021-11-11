@@ -50,4 +50,5 @@ app.*.map.json
 /ios/
 /web/
 /windows/
+/lib/data/
 analysis_options.yaml
